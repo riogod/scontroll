@@ -4,11 +4,19 @@ import './App.css';
 // eslint-disable-next-line import/order
 import { useEffect } from 'react';
 
-const handle = () => {
-  // const childWindow = window.open('', 'modal');
-  // childWindow?.document.write('<h1>Hello</h1>');
-  window.electron.ipcRenderer.myPing();
+const showSettingsHandle = () => {
+  window.electron.ipcRenderer.send('app-settings-open-window', 'PINGGGG!!!!');
 };
+
+const shandle = async () => {
+  // window.electron.ipcRenderer.send('ipc-example', 'PINGGGG!!!!2222');
+  const res = await window.electron.ipcRenderer.invoke(
+    'app-get-settings',
+    'app.mainWindow'
+  );
+  alert(JSON.stringify(res));
+};
+
 //
 // window.electron.ipcRenderer.on('ipc-example', (data) => {
 //   console.log('>>>>>>', data);
@@ -24,7 +32,7 @@ const Hello = () => {
       <h1>electron-react-boilerplate</h1>
       <div className="Hello">
         {/* eslint-disable-next-line jsx-a11y/anchor-is-valid,jsx-a11y/click-events-have-key-events,jsx-a11y/no-static-element-interactions */}
-        <a onClick={handle}>
+        <a onClick={showSettingsHandle}>
           <button type="button">
             <span role="img" aria-label="books">
               📚
@@ -48,7 +56,7 @@ const Test = () => {
   return (
     <div>
       {/* eslint-disable-next-line jsx-a11y/anchor-is-valid,jsx-a11y/click-events-have-key-events,jsx-a11y/no-static-element-interactions */}
-      This is a test! <a onClick={handle}>asdas</a>
+      This is a test! <a onClick={shandle}>asdas</a>
     </div>
   );
 };

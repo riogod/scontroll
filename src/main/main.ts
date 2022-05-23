@@ -9,12 +9,12 @@
  * `./src/main.js` using webpack. This gives us some performance wins.
  */
 import 'reflect-metadata';
-import path from 'path';
-import { app, BrowserWindow, shell, ipcMain } from 'electron';
+import { app, ipcMain, globalShortcut } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
-import MenuBuilder from './menu';
-import { resolveHtmlPath } from './util';
+import { container } from 'tsyringe';
+import AppWindowController from './controller/Windows/AppWindowController';
+import { servicesConfig } from './services/services.config';
 
 export default class AppUpdater {
   constructor() {
@@ -24,12 +24,16 @@ export default class AppUpdater {
   }
 }
 
-let mainWindow: BrowserWindow | null = null;
+const appWindowController = container.resolve(AppWindowController);
 
 ipcMain.on('ipc-example', async (event, arg) => {
   const msgTemplate = (pingPong: string) => `IPC test: ${pingPong}`;
   console.log(msgTemplate(arg));
   event.reply('ipc-example', msgTemplate('pong'));
+});
+
+Object.keys(servicesConfig).forEach((el) => {
+  import(`./services${servicesConfig[el].path}/events`);
 });
 
 if (process.env.NODE_ENV === 'production') {
@@ -44,124 +48,38 @@ if (isDebug) {
   // require('electron-debug')();
 }
 
-const installExtensions = async () => {
-  const installer = require('electron-devtools-installer');
-  const forceDownload = !!process.env.UPGRADE_EXTENSIONS;
-  const extensions = ['REACT_DEVELOPER_TOOLS'];
-
-  return installer
-    .default(
-      extensions.map((name) => installer[name]),
-      forceDownload
-    )
-    .catch(console.log);
-};
-
-const createWindow = async () => {
-  if (isDebug) {
-    await installExtensions();
-  }
-
-  const RESOURCES_PATH = app.isPackaged
-    ? path.join(process.resourcesPath, 'assets')
-    : path.join(__dirname, '../../assets');
-
-  const getAssetPath = (...paths: string[]): string => {
-    return path.join(RESOURCES_PATH, ...paths);
-  };
-
-  mainWindow = new BrowserWindow({
-    show: false,
-    width: 1024,
-    height: 728,
-    modal: true,
-    icon: getAssetPath('icon.png'),
-    // frame: false,
-    webPreferences: {
-      nodeIntegration: false,
-      preload: app.isPackaged
-        ? path.join(__dirname, 'preload.js')
-        : path.join(__dirname, '../../.erb/dll/preload.js'),
-    },
-  });
-  mainWindow.loadURL(resolveHtmlPath('/'));
-
-  mainWindow.on('ready-to-show', () => {
-    if (!mainWindow) {
-      throw new Error('"mainWindow" is not defined');
-    }
-    if (process.env.START_MINIMIZED) {
-      mainWindow.minimize();
-    } else {
-      mainWindow.show();
-    }
-  });
-
-  mainWindow.on('closed', () => {
-    mainWindow = null;
-  });
-
-  const menuBuilder = new MenuBuilder(mainWindow);
-  menuBuilder.buildMenu();
-
-  // Open urls in the user's browser
-  mainWindow.webContents.setWindowOpenHandler((edata) => {
-    shell.openExternal(edata.url);
-
-    return { action: 'deny' };
-  });
-
-  const win = new BrowserWindow({
-    show: false,
-    width: 500,
-    height: 500,
-    parent: mainWindow,
-    alwaysOnTop: true,
-    title: 'HeyHo!',
-    // frame: false,
-    icon: getAssetPath('icon.png'),
-    webPreferences: {
-      preload: app.isPackaged
-        ? path.join(__dirname, 'preload.js')
-        : path.join(__dirname, '../../.erb/dll/preload.js'),
-    },
-  });
-  win.loadURL(resolveHtmlPath('/test'));
-
-  win.on('ready-to-show', () => {
-    win.show();
-    setTimeout(() => {}, 1000);
-  });
-
-  // win.on('show', () => {
-  //   win.webContents.send('ipc-example', 'asd');
-  // });
-
-  // Remove this if your app does not use auto updates
-  // eslint-disable-next-line
-  new AppUpdater();
-};
-
 /**
  * Add event listeners...
  */
 
 app.on('window-all-closed', () => {
+  // console.log('All closed!!', process.platform);
+
   // Respect the OSX convention of having the application in memory even
   // after all windows have been closed
-  if (process.platform !== 'darwin') {
-    app.quit();
-  }
+  // if (process.platform !== 'darwin') {
+  app.quit();
+  // }
 });
 
+app.on('ready', () => {
+  globalShortcut.register('Esc', () => {
+    if (appWindowController.settingsWindow?.isVisible()) {
+      appWindowController.settingsWindow?.hide();
+      appWindowController.mainWindow?.setFocusable(true);
+      appWindowController.mainWindow?.focus();
+    }
+  });
+});
 app
   .whenReady()
   .then(() => {
-    createWindow();
+    appWindowController.initWindows();
     app.on('activate', () => {
       // On macOS it's common to re-create a window in the app when the
       // dock icon is clicked and there are no other windows open.
-      if (mainWindow === null) createWindow();
+      if (appWindowController.mainWindow === null)
+        appWindowController.initWindows();
     });
   })
   .catch(console.log);
