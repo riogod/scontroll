@@ -10,6 +10,11 @@ ipcMain.on('app-settings-open-window', async (_event) => {
   appWindowController.showSettingsWindow();
 });
 
-ipcMain.handle('app-get-settings', async (_event, storeSettings: string) => {
+ipcMain.handle('app-get-settings', (_event, storeSettings: string) => {
   return appStoreController.store.get(storeSettings);
+});
+
+ipcMain.handle('app-set-settings', (_event, args) => {
+  appStoreController.store.set(args.storePath, args.storeValue);
+  return appStoreController.store.get(args.storePath);
 });

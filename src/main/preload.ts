@@ -4,6 +4,7 @@ const validChannels = [
   'ipc-example',
   'app-settings-open-window',
   'app-get-settings',
+  'app-set-settings',
 ];
 
 contextBridge.exposeInMainWorld('electron', {

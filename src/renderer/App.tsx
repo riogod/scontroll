@@ -1,8 +1,8 @@
 import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
-import icon from '../../assets/icon.svg';
+import { CssBaseline } from '@mui/material';
 import './App.css';
-// eslint-disable-next-line import/order
-import { useEffect } from 'react';
+import { FC, useEffect } from 'react';
+import icon from '../../assets/icon.svg';
 
 const showSettingsHandle = () => {
   window.electron.ipcRenderer.send('app-settings-open-window', 'PINGGGG!!!!');
@@ -10,6 +10,11 @@ const showSettingsHandle = () => {
 
 const shandle = async () => {
   // window.electron.ipcRenderer.send('ipc-example', 'PINGGGG!!!!2222');
+  await window.electron.ipcRenderer.invoke('app-set-settings', {
+    storePath: 'app.UISettings.themeMode',
+    storeValue: 'light',
+  });
+
   const res = await window.electron.ipcRenderer.invoke(
     'app-get-settings',
     'app.mainWindow'
@@ -61,13 +66,18 @@ const Test = () => {
   );
 };
 
-export default function App() {
+const App: FC = () => {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Hello />} />
-        <Route path="/test" element={<Test />} />
-      </Routes>
-    </BrowserRouter>
+    <>
+      <CssBaseline />
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Hello />} />
+          <Route path="/test" element={<Test />} />
+        </Routes>
+      </BrowserRouter>
+    </>
   );
-}
+};
+
+export default App;
