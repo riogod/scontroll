@@ -155,7 +155,7 @@ export default class AppWindowController {
       show: false,
       width: 1024,
       height: 768,
-      alwaysOnTop: true,
+      alwaysOnTop: false,
       modal: false,
       skipTaskbar: true,
       center: true,

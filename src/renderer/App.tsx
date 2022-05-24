@@ -1,8 +1,9 @@
 import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
-import { CssBaseline } from '@mui/material';
+import { Container, CssBaseline } from '@mui/material';
 import './App.css';
 import { FC, useEffect } from 'react';
 import icon from '../../assets/icon.svg';
+import SettingsPage from './components/pages/SettingsPage/SettingsPage';
 
 const showSettingsHandle = () => {
   window.electron.ipcRenderer.send('app-settings-open-window', 'PINGGGG!!!!');
@@ -12,7 +13,7 @@ const shandle = async () => {
   // window.electron.ipcRenderer.send('ipc-example', 'PINGGGG!!!!2222');
   await window.electron.ipcRenderer.invoke('app-set-settings', {
     storePath: 'app.UISettings.themeMode',
-    storeValue: 'light',
+    storeValue: 'dark',
   });
 
   const res = await window.electron.ipcRenderer.invoke(
@@ -32,17 +33,13 @@ const Hello = () => {
   return (
     <div>
       <div className="Hello">
-        <img width="200px" alt="icon" src={icon} />
-      </div>
-      <h1>electron-react-boilerplate</h1>
-      <div className="Hello">
         {/* eslint-disable-next-line jsx-a11y/anchor-is-valid,jsx-a11y/click-events-have-key-events,jsx-a11y/no-static-element-interactions */}
         <a onClick={showSettingsHandle}>
           <button type="button">
             <span role="img" aria-label="books">
               📚
             </span>
-            Read our docs
+            Settings
           </button>
         </a>
 
@@ -68,15 +65,21 @@ const Test = () => {
 
 const App: FC = () => {
   return (
-    <>
+    <Container
+      sx={{
+        display: 'flex',
+        height: '100vh',
+        flexDirection: 'column',
+      }}
+    >
       <CssBaseline />
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Hello />} />
-          <Route path="/test" element={<Test />} />
+          <Route path="/test" element={<SettingsPage />} />
         </Routes>
       </BrowserRouter>
-    </>
+    </Container>
   );
 };
 
