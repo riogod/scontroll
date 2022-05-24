@@ -1,6 +1,9 @@
-import { FC, useState } from 'react';
-import { Box, Tab, Tabs } from '@mui/material';
+import React, { FC, useState } from 'react';
+import { Tab, Tabs } from '@mui/material';
 import TabPanel from './components/TabPanel/TabPanel';
+import SettingsHeader from './components/SettingsHeader/SettingsHeader';
+import SettingsFooter from './components/SettingsFooter/SettingsFooter';
+import { TelegramSettings } from './components/TelegramSettings';
 
 const SettingsPage: FC = () => {
   const [value, setValue] = useState(0);
@@ -10,52 +13,51 @@ const SettingsPage: FC = () => {
   };
 
   return (
-    <Box
-      sx={{
+    <div
+      style={{
+        height: '100%',
         flexGrow: 1,
-        bgcolor: 'background.paper',
         display: 'flex',
-        height: 224,
+        flexDirection: 'column',
       }}
     >
-      <Tabs
-        orientation="vertical"
-        variant="scrollable"
-        value={value}
-        onChange={handleChange}
-        aria-label="Vertical tabs example"
-        sx={{ borderRight: 1, borderColor: 'divider' }}
+      <SettingsHeader />
+      <div
+        style={{
+          display: 'flex',
+          overflow: 'hidden',
+          height: '100%',
+        }}
       >
-        <Tab label="Item One" />
-        <Tab label="Item Two" />
-        <Tab label="Item Three" />
-        <Tab label="Item Four" />
-        <Tab label="Item Five" />
-        <Tab label="Item Six" />
-        <Tab label="Item Seven" />
-      </Tabs>
-      <TabPanel value={value} index={0}>
-        Item One
-      </TabPanel>
-      <TabPanel value={value} index={1}>
-        Item Two
-      </TabPanel>
-      <TabPanel value={value} index={2}>
-        Item Three
-      </TabPanel>
-      <TabPanel value={value} index={3}>
-        Item Four
-      </TabPanel>
-      <TabPanel value={value} index={4}>
-        Item Five
-      </TabPanel>
-      <TabPanel value={value} index={5}>
-        Item Six
-      </TabPanel>
-      <TabPanel value={value} index={6}>
-        Item Seven
-      </TabPanel>
-    </Box>
+        <Tabs
+          orientation="vertical"
+          variant="scrollable"
+          value={value}
+          onChange={handleChange}
+          aria-label="Vertical tabs example"
+          sx={{
+            borderRight: 1,
+            borderColor: 'divider',
+            width: 250,
+          }}
+        >
+          <Tab label="Настройки" />
+          <Tab label="API: Telegram" />
+          <Tab label="API: Twitch" />
+          <Tab label="API: Trovo" />
+          <Tab label="API: Youtube" />
+          <Tab label="API: VKONTAKTE" />
+          <Tab label="API: GOODGAME" />
+        </Tabs>
+        <TabPanel value={value} index={0}>
+          Item One
+        </TabPanel>
+        <TabPanel value={value} index={1}>
+          <TelegramSettings />
+        </TabPanel>
+      </div>
+      <SettingsFooter />
+    </div>
   );
 };
 

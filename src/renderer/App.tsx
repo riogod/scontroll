@@ -1,8 +1,7 @@
 import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
-import { Container, CssBaseline } from '@mui/material';
+import { CssBaseline } from '@mui/material';
 import './App.css';
 import { FC, useEffect } from 'react';
-import icon from '../../assets/icon.svg';
 import SettingsPage from './components/pages/SettingsPage/SettingsPage';
 
 const showSettingsHandle = () => {
@@ -65,8 +64,8 @@ const Test = () => {
 
 const App: FC = () => {
   return (
-    <Container
-      sx={{
+    <div
+      style={{
         display: 'flex',
         height: '100vh',
         flexDirection: 'column',
@@ -79,7 +78,7 @@ const App: FC = () => {
           <Route path="/test" element={<SettingsPage />} />
         </Routes>
       </BrowserRouter>
-    </Container>
+    </div>
   );
 };
 

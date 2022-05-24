@@ -155,8 +155,6 @@ export default class AppWindowController {
       show: false,
       width: 1024,
       height: 768,
-      alwaysOnTop: false,
-      modal: false,
       skipTaskbar: true,
       center: true,
       frame: false,
@@ -164,7 +162,6 @@ export default class AppWindowController {
       resizable: false,
       minimizable: false,
       maximizable: false,
-      visualEffectState: 'inactive',
       parent: this.mainWindow,
       webPreferences: {
         preload: app.isPackaged
@@ -184,7 +181,6 @@ export default class AppWindowController {
 
   showSettingsWindow() {
     this.settingsWindow?.show();
-    if (this.mainWindow) this.mainWindow.focusable = false;
   }
 
   getAssetPath(...paths: string[]): string {

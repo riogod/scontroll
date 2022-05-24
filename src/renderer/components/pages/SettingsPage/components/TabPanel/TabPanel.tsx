@@ -14,9 +14,10 @@ const TabPanel: FC<TabPanelProps> = ({ children, index, value, ...other }) => {
       id={`vertical-tabpanel-${index}`}
       aria-labelledby={`vertical-tab-${index}`}
       {...other}
+      style={{ width: '773px', padding: 20 }}
     >
       {value === index && (
-        <Box sx={{ p: 3 }}>
+        <Box>
           <Typography>{children}</Typography>
         </Box>
       )}
