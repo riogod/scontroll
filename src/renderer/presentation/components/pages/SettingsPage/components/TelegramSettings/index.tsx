@@ -1,23 +1,22 @@
 import { Button, TextField, Typography } from '@mui/material';
 import { SetStateAction, useEffect, useState } from 'react';
+import { observer } from 'mobx-react-lite';
 import InputMask from 'react-input-mask';
+import useContainer from '../../../../../hooks/useContainer/useContainer';
 
-export const TelegramSettings = () => {
-  const [loading, setLoading] = useState(false);
+import TelegramAPIEntity from '../../../../../../domain/entity/API/TelegramAPIEntity/TelegramAPIEntity';
+
+const TelegramSettings = () => {
+  const telegramEntity = useContainer<TelegramAPIEntity>(TelegramAPIEntity);
+
   const [phone, setPhone] = useState('');
   const [code, setCode] = useState('');
   const [connected, setConnected] = useState(false);
   const [codeSend, setCodeSend] = useState(false);
 
   useEffect(() => {
-    window.electron.ipcRenderer.on(
-      'loading-telegram-mtproto-service',
-      (arg) => {
-        setLoading(arg.loading);
-      }
-    );
-  }, []);
-
+    setConnected(telegramEntity.isTelegramAuth);
+  }, [telegramEntity.isTelegramAuth, telegramEntity.loaded]);
   //  const checkStatus = () => window.telegram.ipcRenderer.subscribeTelegramStatus('_connect_Telegram').then((data: any) => {
   //     setConnected(data.connected);
   //   });
@@ -29,8 +28,10 @@ export const TelegramSettings = () => {
   };
 
   const sendCodeHandler = () => {
-    // window.telegram.ipcRenderer.sendCode(phone);
-    // setCodeSend(true);
+    window.electron.ipcRenderer.send('telegram-auth-send-code', {
+      phone,
+    });
+    setCodeSend(true);
   };
 
   const testSoundHandler = () => {
@@ -38,16 +39,15 @@ export const TelegramSettings = () => {
   };
 
   const singInHandler = async () => {
-    // try {
-    // await window.telegram.ipcRenderer.singIn(code);
-    // } finally {
-    //   checkStatus();
-    // }
+    if (code) {
+      window.electron.ipcRenderer.send('telegram-auth-sing-in', {
+        code,
+      });
+      setConnected(true);
+    }
   };
 
-  if (loading) {
-    return <>loading...</>;
-  }
+  if (!telegramEntity.loaded) return <>Loading...</>;
 
   return (
     <div
@@ -121,44 +121,47 @@ export const TelegramSettings = () => {
       )}
 
       {!connected && codeSend && (
-        <div style={{ display: 'flex', flexDirection: 'column' }}>
-          <TextField
-            label="Код авторизации из сообщения"
-            value={code}
-            onChange={(e) => {
-              setCode(e.target.value);
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'start',
+            justifyContent: 'center',
+          }}
+        >
+          <Typography variant="h6" sx={{ marginBottom: 2 }}>
+            Авторизация пользователя в телеграм:
+          </Typography>
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'center',
             }}
-            size="small"
-            sx={{ width: 400, marginBottom: 2 }}
           >
-            <InputMask mask="(0)999 999 99 99" maskChar=" " />
-          </TextField>
+            <TextField
+              label="Код авторизации из сообщения"
+              size="small"
+              sx={{ width: 300 }}
+              value={code}
+              onChange={(e: { target: { value: SetStateAction<string> } }) => {
+                setCode(e.target.value);
+              }}
+            />
 
-          <Button sx={{ width: 400 }} onClick={singInHandler}>
-            Отправить код
-          </Button>
+            <Button
+              sx={{ width: 150, marginLeft: 1 }}
+              size="medium"
+              onClick={singInHandler}
+            >
+              Ввести код
+            </Button>
+          </div>
         </div>
       )}
-
-      {/*<TextField id="outlined-basic" label="Outlined" variant="outlined" value={phone} onChange={(e) => {*/}
-      {/*  setPhone(e.target.value)*/}
-      {/*}} />*/}
-      {/*<button type="button" onClick={() => {*/}
-      {/*  window.telegram.ipcRenderer.sendCode(phone);*/}
-      {/*}} > SendPhone </button>*/}
-
-      {/*<TextField id="outlined-basic" label="Outlined" variant="outlined" value={code} onChange={(e) => {*/}
-      {/*  setCode(e.target.value)*/}
-      {/*}} />*/}
-      {/*<button type="button" onClick={() => {*/}
-      {/*  window.telegram.ipcRenderer.singIn(code);*/}
-      {/*}} > Send Code </button>*/}
-      {/*<button type="button" onClick={() => {*/}
-
-      {/*}} > Logout </button>*/}
-      {/*<button type="button" onClick={() => {*/}
-
-      {/*}} > STATUS </button>*/}
     </div>
   );
 };
+
+export default observer(TelegramSettings);

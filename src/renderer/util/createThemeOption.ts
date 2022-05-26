@@ -1,9 +1,10 @@
 import { ThemeOptions } from '@mui/material/styles/createTheme';
 import { jsx } from '@emotion/react';
 import IntrinsicAttributes = jsx.JSX.IntrinsicAttributes;
+import { IUIThemeSettings } from '../domain/entity/AppSettings/interfaces';
 
-export const createThemeOption = (
-  UISettings: any
+const createThemeOption = (
+  UISettings: IUIThemeSettings
 ): IntrinsicAttributes & ThemeOptions => {
   return {
     palette: {

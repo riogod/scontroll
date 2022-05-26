@@ -1,5 +1,6 @@
 import { inject, singleton } from 'tsyringe';
 import { app, BrowserWindow, shell } from 'electron';
+
 import path from 'path';
 import { resolveHtmlPath } from '../../util';
 import MenuBuilder from '../../menu';
@@ -98,28 +99,17 @@ export default class AppWindowController {
         return;
       }
       const size = this.mainWindow.getSize();
-      this.storeController.store.set({
-        'app.mainWindow.width': size[0],
-        'app.mainWindow.height': size[1],
-      });
+      this.storeController.store.set('app.mainWindow.width', size[0]);
+      this.storeController.store.set('app.mainWindow.height', size[1]);
     });
     mainWindow.on('moved', () => {
       if (!this.mainWindow) {
         return;
       }
       const pos = this.mainWindow.getPosition();
-      this.storeController.store.set({
-        'app.mainWindow.x': pos[0],
-        'app.mainWindow.y': pos[1],
-      });
+      this.storeController.store.set('app.mainWindow.x', pos[0]);
+      this.storeController.store.set('app.mainWindow.y', pos[1]);
     });
-
-    // mainWindow.on('focus', () => {
-    //   if (this.settingsWindow && this.settingsWindow.isVisible()) {
-    //     console.log('focus');
-    //     this.settingsWindow.focus();
-    //   }
-    // });
 
     const menuBuilder = new MenuBuilder(mainWindow);
     menuBuilder.buildMenu();
@@ -136,7 +126,6 @@ export default class AppWindowController {
       BrowserWindow.getAllWindows().forEach((window) => {
         window.close();
       });
-      console.log(BrowserWindow.getAllWindows());
     });
 
     this.createSettingsWindow();

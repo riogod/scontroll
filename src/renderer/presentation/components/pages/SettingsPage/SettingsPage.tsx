@@ -3,7 +3,9 @@ import { Tab, Tabs } from '@mui/material';
 import TabPanel from './components/TabPanel/TabPanel';
 import SettingsHeader from './components/SettingsHeader/SettingsHeader';
 import SettingsFooter from './components/SettingsFooter/SettingsFooter';
-import { TelegramSettings } from './components/TelegramSettings';
+import TelegramSettings from './components/TelegramSettings';
+import TwitchSettings from './components/TwitchSettings';
+import SettingsSettings from './components/SettingsSettings';
 
 const SettingsPage: FC = () => {
   const [value, setValue] = useState(0);
@@ -50,10 +52,13 @@ const SettingsPage: FC = () => {
           <Tab label="API: GOODGAME" />
         </Tabs>
         <TabPanel value={value} index={0}>
-          Item One
+          <SettingsSettings />
         </TabPanel>
         <TabPanel value={value} index={1}>
           <TelegramSettings />
+        </TabPanel>
+        <TabPanel value={value} index={2}>
+          <TwitchSettings />
         </TabPanel>
       </div>
       <SettingsFooter />

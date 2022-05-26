@@ -3,8 +3,11 @@ import { contextBridge, ipcRenderer, IpcRendererEvent } from 'electron';
 const validChannels = [
   'ipc-example',
   'app-settings-open-window',
+  'app-oauth-open-window',
   'app-get-settings',
   'app-set-settings',
+  'telegram-auth-send-code',
+  'telegram-auth-sing-in',
 ];
 
 contextBridge.exposeInMainWorld('electron', {

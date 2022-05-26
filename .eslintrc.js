@@ -9,6 +9,12 @@ module.exports = {
     'import/prefer-default-export': 'off',
     'no-underscore-dangle': 'off',
     'react/jsx-props-no-spreading': 'off',
+    'no-unused-vars': 'off',
+    'promise/always-return': 'off',
+    '@typescript-eslint/no-unused-vars': [
+      'error',
+      { varsIgnorePattern: '^_', argsIgnorePattern: '^_' },
+    ],
   },
   parserOptions: {
     ecmaVersion: 2020,
