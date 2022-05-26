@@ -1,4 +1,3 @@
-// @ts-ignore
 import React, { FC } from 'react';
 import { Button, Divider } from '@mui/material';
 
