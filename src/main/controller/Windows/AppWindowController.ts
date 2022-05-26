@@ -67,7 +67,7 @@ export default class AppWindowController {
       icon: this.getAssetPath('icon.png'),
       // frame: false,
       webPreferences: {
-        nodeIntegration: false,
+        nodeIntegration: true,
         preload: app.isPackaged
           ? path.join(__dirname, 'preload.js')
           : path.join(__dirname, '../../../../.erb/dll/preload.js'),
@@ -81,7 +81,7 @@ export default class AppWindowController {
     const mainWindow = new BrowserWindow(opts);
 
     this.setMainWindowId(mainWindow.id);
-    mainWindow.loadURL(resolveHtmlPath('/'));
+    mainWindow.loadURL(resolveHtmlPath('index.html#/'));
 
     mainWindow.on('ready-to-show', () => {
       if (!mainWindow) {
@@ -153,13 +153,14 @@ export default class AppWindowController {
       maximizable: false,
       parent: this.mainWindow,
       webPreferences: {
+        nodeIntegration: true,
         preload: app.isPackaged
           ? path.join(__dirname, 'preload.js')
           : path.join(__dirname, '../../../../.erb/dll/preload.js'),
       },
     });
 
-    settingsWindow.loadURL(resolveHtmlPath('/test'));
+    settingsWindow.loadURL(resolveHtmlPath('index.html').concat('#/test'));
     this._settingsWindowID = settingsWindow.id;
 
     settingsWindow.on('close', (event) => {
