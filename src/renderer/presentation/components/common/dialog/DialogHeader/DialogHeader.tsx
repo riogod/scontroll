@@ -1,7 +1,7 @@
 import { FC } from 'react';
-import { Divider, Typography } from '@mui/material';
+import { Divider } from '@mui/material';
 
-const SettingsHeader: FC = () => {
+const DialogHeader: FC = ({ children }) => {
   return (
     <div
       style={{
@@ -13,12 +13,10 @@ const SettingsHeader: FC = () => {
         margin: 0,
       }}
     >
-      <Typography variant="h5" style={{ paddingTop: 15, paddingBottom: 15 }}>
-        Настройки
-      </Typography>
+      {children}
       <Divider style={{ width: '100%', padding: 0 }} />
     </div>
   );
 };
 
-export default SettingsHeader;
+export default DialogHeader;

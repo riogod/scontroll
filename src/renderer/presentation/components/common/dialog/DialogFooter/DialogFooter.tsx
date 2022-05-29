@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
-import { Button, Divider } from '@mui/material';
+import { Divider } from '@mui/material';
 
-const SettingsFooter: FC = () => {
+const DialogFooter: FC = ({ children }) => {
   return (
     <>
       <Divider style={{ width: '100%', padding: 0 }} />
@@ -16,10 +16,10 @@ const SettingsFooter: FC = () => {
           padding: 15,
         }}
       >
-        <Button variant="contained">Закрыть</Button>
+        {children}
       </div>
     </>
   );
 };
 
-export default SettingsFooter;
+export default DialogFooter;

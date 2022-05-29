@@ -8,6 +8,9 @@ const validChannels = [
   'app-set-settings',
   'telegram-auth-send-code',
   'telegram-auth-sing-in',
+  'app-update-render-settings',
+  'app-stream-settings-open-window',
+  'app-stream-settings-close-window',
 ];
 
 contextBridge.exposeInMainWorld('electron', {

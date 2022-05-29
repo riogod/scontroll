@@ -27,7 +27,6 @@ export default class TelegramAPIEntity {
         console.log(toJS(cred));
         this.twitchAPICred = toJS(cred);
         this.loaded = true;
-        console.log('!>!>!>!', this.twitchAPICred);
 
         return cred;
       })

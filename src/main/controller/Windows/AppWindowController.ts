@@ -12,6 +12,8 @@ export default class AppWindowController {
 
   private _settingsWindowID: number = -1;
 
+  private _streamSettingsWindowID: number = -1;
+
   private isDebug =
     process.env.NODE_ENV === 'development' || process.env.DEBUG_PROD === 'true';
 
@@ -29,6 +31,10 @@ export default class AppWindowController {
 
   get settingsWindow(): BrowserWindow | null {
     return BrowserWindow.fromId(this._settingsWindowID);
+  }
+
+  get streamSettingsWindow(): BrowserWindow | null {
+    return BrowserWindow.fromId(this._streamSettingsWindowID);
   }
 
   constructor(
@@ -129,6 +135,7 @@ export default class AppWindowController {
     });
 
     this.createSettingsWindow();
+    this.createStreamSettingsWindow();
   };
 
   setMainWindowId(id: number) {
@@ -147,6 +154,7 @@ export default class AppWindowController {
       skipTaskbar: true,
       center: true,
       frame: false,
+      // modal: true,
       movable: false,
       resizable: false,
       minimizable: false,
@@ -160,7 +168,7 @@ export default class AppWindowController {
       },
     });
 
-    settingsWindow.loadURL(resolveHtmlPath('index.html').concat('#/test'));
+    settingsWindow.loadURL(resolveHtmlPath('index.html').concat('#/settings'));
     this._settingsWindowID = settingsWindow.id;
 
     settingsWindow.on('close', (event) => {
@@ -169,8 +177,57 @@ export default class AppWindowController {
     });
   }
 
+  createStreamSettingsWindow() {
+    if (!this.mainWindow) {
+      return;
+    }
+
+    const streamSettingsWindow = new BrowserWindow({
+      show: false,
+      width: 1024,
+      height: 768,
+      skipTaskbar: true,
+      center: true,
+      frame: false,
+      // modal: true,
+      movable: false,
+      resizable: false,
+      minimizable: false,
+      maximizable: false,
+      parent: this.mainWindow,
+      webPreferences: {
+        nodeIntegration: true,
+        preload: app.isPackaged
+          ? path.join(__dirname, 'preload.js')
+          : path.join(__dirname, '../../../../.erb/dll/preload.js'),
+      },
+    });
+
+    streamSettingsWindow.loadURL(
+      resolveHtmlPath('index.html').concat('#/streamsettings')
+    );
+    this._streamSettingsWindowID = streamSettingsWindow.id;
+
+    streamSettingsWindow.on('close', (event) => {
+      event.preventDefault();
+      streamSettingsWindow.hide();
+    });
+  }
+
   showSettingsWindow() {
     this.settingsWindow?.show();
+  }
+
+  hideSettingsWindow() {
+    this.settingsWindow?.hide();
+  }
+
+  showStreamSettingsWindow() {
+    this.streamSettingsWindow?.show();
+  }
+
+  hideStreamSettingsWindow() {
+    this.streamSettingsWindow?.hide();
   }
 
   getAssetPath(...paths: string[]): string {

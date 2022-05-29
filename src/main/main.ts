@@ -9,7 +9,7 @@
  * `./src/main.js` using webpack. This gives us some performance wins.
  */
 import 'reflect-metadata';
-import { app, ipcMain, globalShortcut } from 'electron';
+import { app, ipcMain } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
 import { container } from 'tsyringe';
@@ -63,13 +63,13 @@ app.on('window-all-closed', () => {
 });
 
 app.on('ready', () => {
-  globalShortcut.register('Esc', () => {
-    if (appWindowController.settingsWindow?.isVisible()) {
-      appWindowController.settingsWindow?.hide();
-      appWindowController.mainWindow?.setFocusable(true);
-      appWindowController.mainWindow?.focus();
-    }
-  });
+  // globalShortcut.register('Esc', () => {
+  //   if (appWindowController.settingsWindow?.isVisible()) {
+  //     appWindowController.settingsWindow?.hide();
+  //     appWindowController.mainWindow?.setFocusable(true);
+  //     appWindowController.mainWindow?.focus();
+  //   }
+  // });
 });
 app
   .whenReady()

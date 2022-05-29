@@ -10,6 +10,7 @@ import AppSettingsEntity from '../domain/entity/AppSettings/AppSettingsEntity';
 import MainPage from './components/pages/MainPage/MainPage';
 import createThemeOption from '../util/createThemeOption';
 import SettingsPage from './components/pages/SettingsPage/SettingsPage';
+import StreamSettingsPage from './components/pages/StreamSettingsPage/StreamSettingsPage';
 
 const App: FC = () => {
   const appSettingsEntity = useContainer<AppSettingsEntity>(AppSettingsEntity);
@@ -33,7 +34,8 @@ const App: FC = () => {
         <Router>
           <Routes>
             <Route path="/" element={<MainPage />} />
-            <Route path="/test" element={<SettingsPage />} />
+            <Route path="/settings" element={<SettingsPage />} />
+            <Route path="/streamsettings" element={<StreamSettingsPage />} />
           </Routes>
         </Router>
       </div>

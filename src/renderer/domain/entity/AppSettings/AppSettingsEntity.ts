@@ -1,7 +1,7 @@
 import { singleton } from 'tsyringe';
 import { set } from 'lodash';
 
-import { makeAutoObservable, toJS } from 'mobx';
+import { makeAutoObservable, runInAction, toJS } from 'mobx';
 import { IAppSettings } from '../../../../main/controller/AppStore/interfaces';
 import { IUIThemeSettings } from './interfaces';
 
@@ -28,15 +28,20 @@ export default class AppSettingsEntity {
   constructor() {
     makeAutoObservable(this);
     this.initAppSettings();
+
+    window.electron.ipcRenderer.on('app-update-render-settings', () => {
+      this.initAppSettings();
+    });
   }
 
   initAppSettings() {
     window.electron.ipcRenderer
       .invoke('app-get-settings', 'app')
       .then((settings: IAppSettings) => {
-        this.appSettings = toJS(settings);
-        this.loaded = true;
-
+        runInAction(() => {
+          this.appSettings = toJS(settings);
+          this.loaded = true;
+        });
         return settings;
       })
       .catch((e: never) => {

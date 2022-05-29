@@ -24,9 +24,9 @@ const AppMenu: FC = () => {
     },
     {
       icon: <AccountBalanceWalletIcon />,
-      name: 'Сценарии',
+      name: 'Настройки трансляции',
       onClick: () => {
-        window.electron.ipcRenderer.send('app-settings-open-window');
+        window.electron.ipcRenderer.send('app-stream-settings-open-window');
         handleClose();
       },
     },
