@@ -27,6 +27,7 @@ const StreamSettingsPage: FC = () => {
           display: 'flex',
           overflow: 'hidden',
           height: '100%',
+          padding: 20,
         }}
       >
         Stream settings

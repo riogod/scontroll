@@ -63,6 +63,7 @@ app.on('window-all-closed', () => {
 });
 
 app.on('ready', () => {
+  // alert(process.env.PRT);
   // globalShortcut.register('Esc', () => {
   //   if (appWindowController.settingsWindow?.isVisible()) {
   //     appWindowController.settingsWindow?.hide();
